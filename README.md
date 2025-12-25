@@ -10,11 +10,11 @@ Pomocou ELT procesu v Snowflake vytváram dátový sklad (DWH) so Star schémou.
 
 
 
+<br>
 
 
 
-
-1. ### **Úvod a popis zdrojových dát**
+## **1. Úvod a popis zdrojových dát**
 
 
 
@@ -36,37 +36,38 @@ Zdrojové dáta pochádzajú z tabuliek:
 
 
 
-* `OUR\_WORLD\_IN\_DATA\_ATTRIBUTES` - metadáta jednotlivých ukazovateľov (názov, jednotka, typ merania)
-* `OUR\_WORLD\_IN\_DATA\_TIMESERIES` - hlavná tabuľka dát, ktorá obsahuje samotné merania ukazovateľov v čase
-* `GEOGRAPHY\_INDEX` - informácie o geografických jednotkách 
+* `OUR_WORLD_IN_DATA_ATTRIBUTES` - metadáta jednotlivých ukazovateľov (názov, jednotka, typ merania)
+* `OUR_WORLD_IN_DATA_TIMESERIES` - hlavná tabuľka dát, ktorá obsahuje samotné merania ukazovateľov v čase
+* `GEOGRAPHY_INDEX` - informácie o geografických jednotkách 
 
 
 
 
+<br>
+
+
+### **1.1 Dátová architektúra**
 
 
 
-#### **1.1 Dátová architektúra**
-
-
-
-###### **ERD - entitno-relačný diagram**
+#### **ERD - entitno-relačný diagram**
 
 
 
 Surová vrstva obsahuje neupravené dáta z pôvodnej štruktúry datasetu, znázornené pomocou ERD. Vynechali sme PIT (point in time) tabuľky, lebo aj keď patria k datasetu, nie sú relevantné pre túto analýzu. Zdrojový dataset taktiež neobsahuje explicitne definované primárne kľúče, no pre účely ERD som ich definovala na základe logických súvislostí.
 
 
-
-!\[ERD diagram](img/ERD\_OWID.png)
-
-
-
-\*Obrázok 1 - Entitno-relačný diagram OWID\*
-
+<p align="center">
+  <img width="730" height="582" alt="ERD_OWID" src="https://github.com/user-attachments/assets/24f801eb-91e2-497c-8807-adaeff6cfca4" />
+  <br>
+  <em>Obrázok 1 – Entitno-relačný diagram OWID</em>
+</p>
 
 
 
+
+
+<br>
 
 
 
