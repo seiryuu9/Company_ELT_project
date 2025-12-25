@@ -1,12 +1,12 @@
-# **ELT proces datasetu OUR\_WORLD\_IN\_DATA**
+# **ELT proces datasetu COMPANY**
 
 
 
 
 
-V tomto projekte sa zameriavam na analýzu datasetu **OUR\_WORLD\_IN\_DATA (OWID)** zo Snowflake marketplace, ktorý je súčasťou [Snowflake Public Data (Free)](https://app.snowflake.com/marketplace/listing/GZTSZ290BV255/snowflake-public-data-products-snowflake-public-data-free?search=snowflake&originTab=provider&providerName=Snowflake+Public+Data+Products&profileGlobalName=GZTSZAS2KCS).
+V tomto projekte sa zameriavam na analýzu datasetu **COMPANY** zo Snowflake marketplace, ktorý je súčasťou [Snowflake Public Data (Free)](https://app.snowflake.com/marketplace/listing/GZTSZ290BV255/snowflake-public-data-products-snowflake-public-data-free?search=snowflake&originTab=provider&providerName=Snowflake+Public+Data+Products&profileGlobalName=GZTSZAS2KCS).
 
-Pomocou ELT procesu v Snowflake vytváram dátový sklad (DWH) so Star schémou. OWID nám poskytuje dáta o socio-ekonomických a enviromentálnych ukazovateľoch v závislosti od geografickej lokality a času. Výsledný dátový model nám umožňuje multidimenzionálnu analýzu trendov, porovnávanie krajín, sledovanie vývoja vybraných ukazovateľov v čase a ich vizualizáciu.
+Pomocou ELT procesu v Snowflake vytváram dátový sklad (DWH) so Star schémou, ktorý umožňuje analytické spracovanie dát z oblasti firemnej štruktúry, korporátnych vzťahov a udalostí v čase. Výsledný dátový model umožňuje multidimenzionálnu analýzu firemných udalostí, porovnávanie spoločností, analýzu vzťahov medzi firmami, sledovanie vývoja v čase a ich vizualizáciu.
 
 
 
@@ -18,7 +18,7 @@ Pomocou ELT procesu v Snowflake vytváram dátový sklad (DWH) so Star schémou.
 
 
 
-Dataset OWID sprístupňuje verejne dostupné údaje o rôznych oblastiach, ako sú zdravie, populácia, ekonomika, životné prostredie či vzdelávanie.
+Dataset COMPANY sprístupňuje verejne dostupné údaje o spoločnostiach a ich ekosystéme, vrátane základných identifikačných údajov, organizačných charakteristík, vzťahov medzi spoločnosťami a záznamov o firemných udalostiach.
 
 
 
@@ -26,9 +26,11 @@ Analýza je zameraná najmä na:
 
 
 
-* vývoj hodnôt jednotlivých indikátorov v čase
-* porovnanie geografických jednotiek (krajiny, regióny)
-* identifikáciu trendov a extrémov v dátach
+* analýzu firemných udalostí a ich vývoja v čase
+* porovnanie spoločností podľa rôznych charakteristík
+* identifikáciu vzťahov medzi spoločnosťami
+* analýzu vzťahov spoločností na cenné papiere
+* identifikáciu trendov a frekvencie firemných udalostí
 
 
 
@@ -36,10 +38,12 @@ Zdrojové dáta pochádzajú z tabuliek:
 
 
 
-* `OUR_WORLD_IN_DATA_ATTRIBUTES` - metadáta jednotlivých ukazovateľov (názov, jednotka, typ merania)
-* `OUR_WORLD_IN_DATA_TIMESERIES` - hlavná tabuľka dát, ktorá obsahuje samotné merania ukazovateľov v čase
-* `GEOGRAPHY_INDEX` - informácie o geografických jednotkách 
-
+* `COMPANY_INDEX` - centrálna tabuľka obsahujúca základné identifikačné údaje o spoločnostiach
+* `COMPANY_CHARACTERISTICS` - charakteristiky spoločností s časovou platnosťou
+* `COMPANY_DOMAIN_RELATIONSHIP` - vzťahy spoločností k doménam s definovaným obdobím platnosti
+* `COMPANY_RELATIONSHIPS` - vzťahy medzi spoločnosťami
+* `COMPANY_SECURITY_RELATIONSHIPS` - vzťahy spoločností na cenné papiere (ako akcie, dlhopisy)
+* `COMPANY_EVENT_TRANSCRIPT_ATTRIBUTES` - údaje o firemných udalostiach vrátane textových transkriptov
 
 
 
@@ -58,9 +62,10 @@ Surová vrstva obsahuje neupravené dáta z pôvodnej štruktúry datasetu, zná
 
 
 <p align="center">
-  <img width="730" height="582" alt="ERD_OWID" src="https://github.com/user-attachments/assets/24f801eb-91e2-497c-8807-adaeff6cfca4" />
+  <img width="1360" height="1010" alt="ERD_Company" src="https://github.com/user-attachments/assets/73da9a80-c86e-400d-a587-8d85b874adc8" />
   <br>
-  <em>Obrázok 1 – Entitno-relačný diagram OWID</em>
+  <em>Obrázok 1 – Entitno-relačný diagram Company datasetu</em>
+
 </p>
 
 
