@@ -102,7 +102,7 @@ napojenú na 4 dimenzie:
 Samotná štruktúra hviezdicovej schémy je znázornená na diagrame nižšie, kde môžeme pozorovať jednotlivé vzťahy a prepojenia medzi tabuľkami. Môžeme si taktiež všimnúť, že niektoré údaje z pôvodnej ERD scény sme vynechali, keďže nie sú relevantné pre našu analýzu udalostí a zlepší sa tak prehľadnosť.
 
 <p align="center">
-  <img width="803" height="593" alt="Star_schema_Company" src="https://github.com/user-attachments/assets/bc2c3904-8720-49fa-88b9-b5887ff22a8b" />
+  <img width="803" height="536" alt="Star_schema_Company" src="https://github.com/user-attachments/assets/4ee13c5c-a0df-4b29-8d7b-8fa2df804c2d" />
   <br>
   <em>Obrázok 2 – Star schéma pre Company dataset</em>
 </p>
@@ -120,9 +120,22 @@ Tento proces bol implementovaný v Snowflake s cieľom pripraviť zdrojové dát
 
 <br>
 
-### **3.1 Extract**
+### **3.1 Extract a load**
 
-woof
+V tejto časti sa spájajú fázy Extract a Load – dôvodom je, že nepoužívame CSV alebo iné súbory, z ktorých by sme dáta museli extrahovať a nahrávať do Snowflake stage.
+
+Tu sme si vytvorili staging tabuľky (čo je vlastne Load fáza), do ktorých boli importované surové dáta z pôvodného datasetu (takže select je Extract fáza), čiže sa obe fázy stanú v jednom kóde.
+Po vytvorení Star schémy a ujasnení si, čo bude naša fact tabuľka, sme prišli na to, že nám stačí vytvoriť 2 staging tabuľky z company_index a company_event_transcript_attributes.
+Extrakcia a načítanie dát bola zabezpečená kódom (príklad):
+
+```sql
+CREATE OR REPLACE TABLE company_index_staging AS
+SELECT * FROM snowflake_public_data_free.public_data_free.company_index;
+```
+
+### **3.2 Transform**
+
+V transformačnej fáze čistíme a obohacujeme dáta zo staging tabuliek. Cieľom je, podľa našej Star schémy, vytvoriť tabuľku faktov a tabuľky dimenzii
 
 
 
