@@ -63,7 +63,7 @@ Surová vrstva obsahuje neupravené dáta z pôvodnej štruktúry datasetu, zná
 
 
 <p align="center">
-  <img width="1360" height="1010" alt="ERD_Company" src="https://github.com/user-attachments/assets/73da9a80-c86e-400d-a587-8d85b874adc8" />
+  <img alt = "erd" src = "img/ERD_Company.png">
   <br>
   <em>Obrázok 1 – Entitno-relačný diagram Company datasetu</em>
 </p>
@@ -98,7 +98,7 @@ napojenú na 4 dimenzie:
 Samotná štruktúra hviezdicovej schémy je znázornená na diagrame nižšie, kde môžeme pozorovať jednotlivé vzťahy a prepojenia medzi tabuľkami. Môžeme si taktiež všimnúť, že niektoré údaje z pôvodnej ERD scény sme vynechali, keďže nie sú relevantné pre našu analýzu udalostí a zlepší sa tak prehľadnosť.
 
 <p align="center">
-  <img width="803" height="547" alt="Star_schema_Company" src="https://github.com/user-attachments/assets/7f19e4c0-b69f-4e85-82a8-5792ba6840db" />
+  <img alt="Star_schema_Company" src="img/Star_schema_Company.png" />
   <br>
   <em>Obrázok 2 – Star schéma pre Company dataset</em>
 </p>
@@ -133,6 +133,7 @@ SELECT *
 FROM snowflake_public_data_free.public_data_free.company_event_transcript_attributes;
 ```
 <br>
+
 ### **3.2 Transform**
 
 V transformačnej fáze čistíme a obohacujeme dáta zo staging tabuliek. Cieľom je, podľa nášho  viacdimenzionálneho modelu Star schema, vytvoriť tabuľku faktov a tabuľky dimenzii. Vďaka nim budeme môcť neskôr robiť efektívnu analýzu udalostí a ich následnú vizualizáciu.
@@ -272,7 +273,104 @@ DROP TABLE IF EXISTS company_index_staging;
 
 ## **4. Vizualizácia dát**
 
+Dashboard datasetu Company obsahuje 6 vizualizácii, ktoré nás prehľadne informujú o trendoch udalostí firiem a kľúčových metrikách. Umožňujú nám pochopiť správanie firiem a organizáciu firemných udalostí.
 
+
+<p align="center">
+  <img width="2684" height="1251" alt="image" src="https://github.com/user-attachments/assets/c710325e-e1f2-4879-a2ac-7c42ddde8a98" />
+  <br>
+  <em>Obrázok 3 - Dashboard Company datasetu (placeholder, will replace with a screenshot from a larger screen when im able to :p)</em>
+</p>
+
+
+<br>
+
+### **Graf 1: Počet udalostí podľa typu udalosti**
+
+Tento stĺpcový graf ukáže, ktoré typy udalostí sa vyskytujú najčastejšie a ktoré menej často. Pomáha identifikovať najrelevantnejšie typy udalostí. Môžeme vidieť, že na prvom miest je prevalentne "Earnings call", na druhom "Conference" a ostatné typy sú pomenej, pričom najmenšiu hodnotu má "Update / Briefing (Trading update)"
+
+```sql
+SELECT et.event_type, COUNT(f.fact_id) AS total_events
+FROM fact_company_events f
+JOIN dim_event_type et ON f.event_type_id = et.event_type_id
+GROUP BY et.event_type
+ORDER BY total_events DESC;
+```
+<br>
+
+### **Graf 2: Počet udalostí podľa roku**
+
+Čiarový graf zobrazí trend počtu udalostí za roky. Ukáže, či počet udalostí rastie, klesá alebo je stabilný. Môžeme pozorovať prudký nárast v roku 2025.
+
+
+```sql
+SELECT d.year, COUNT(f.fact_id) AS total_events
+FROM fact_company_events f
+JOIN dim_date d ON f.date_id = d.date_id
+GROUP BY d.year
+ORDER BY d.year;
+```
+<br>
+
+### **Graf 3: Počet udalostí podľa spoločnosti**
+
+Tento stĺpcový graf ukáže top 10 spoločností podľa počtu udalostí - ukáže, spoločnosti sú najaktívnejšie alebo najviac analyzované.
+
+
+```sql
+SELECT c.company_name, COUNT(f.fact_id) AS total_events
+FROM fact_company_events f
+JOIN dim_company c ON f.company_sk = c.company_sk
+GROUP BY c.company_name
+ORDER BY total_events DESC
+LIMIT 10;
+```
+<br>
+
+### **Graf 4: Priemerný počet dní medzi udalosťami**
+
+Vizualizácia zobrazuje priemerný počet dní medzi po sebe nasledujúcimi udalosťami pre jednotlivé typy udalostí. Do analýzy boli zahrnuté iba tie typy udalostí, ktoré sa vyskytli aspoň dvakrát, a teda astribút days_since_prev_event nesmie byť NULL, aby bola zabezpečená štatistická relevantnosť výsledkov.
+
+
+```sql
+SELECT et.event_type, ROUND(AVG(f.days_since_prev_event), 0) AS avg_days_between_events
+FROM fact_company_events f 
+JOIN dim_event_type et ON f.event_type_id = et.event_type_id
+WHERE f.days_since_prev_event IS NOT NULL
+GROUP BY et.event_type
+HAVING COUNT(f.event_type_id) >= 2
+ORDER BY avg_days_between_events;
+```
+<br>
+
+### **Graf 5: Rozdelenie udalostí podľa hodiny dňa**
+
+Histogram zobrazí, v ktorých hodinách dňa sa udalosti najčastejšie vyskytujú. Pomáha odhaliť časové vzorce. Napríklad vidíme, že väčšina stretnutí sa odohráva o 12-tej na obed a poobedné hodiny sú taktiež populárne pre firemné udalosti.
+
+```sql
+SELECT t.hour, COUNT(f.fact_id) AS total_events
+FROM fact_company_events f
+JOIN dim_time t ON f.time_id = t.time_id
+GROUP BY t.hour
+ORDER BY t.hour;
+```
+<br>
+
+### **Graf 6: Počet udalostí podľa typu a fiškálneho roka**
+
+Skupinový stĺpcový graf ukáže, ako sa počet udalostí jednotlivých typov menil v priebehu rokov. Umožňuje sledovať trendy podľa typov. Z analýzy boli vylúčené záznamy s hodnotou fiškálneho roka 'None', aby bola zabezpečená konzistentnosť časovej analýzy.
+
+```sql
+SELECT et.event_type, et.fiscal_year, COUNT(f.fact_id) AS total_events
+FROM fact_company_events f
+JOIN dim_event_type et ON f.event_type_id = et.event_type_id
+WHERE et.fiscal_year != 'None'
+GROUP BY et.event_type, et.fiscal_year
+ORDER BY et.fiscal_year, total_events DESC;
+```
+<br>
+
+**Autor:** Ema Radzová
 
 
 
