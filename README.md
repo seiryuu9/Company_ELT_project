@@ -280,13 +280,13 @@ DROP TABLE IF EXISTS company_index_staging;
 
 ## **4. Vizualizácia dát**
 
-Dashboard datasetu Company obsahuje 6 vizualizácii, ktoré nás prehľadne informujú o trendoch udalostí firiem a kľúčových metrikách. Umožňujú nám pochopiť správanie firiem a organizáciu firemných udalostí. Vizualizácie sú postavené nad faktovou tabuľkou fact_company_events a príslušnými dimenziami.
+Dashboard datasetu Company obsahuje 6 vizualizácii, ktoré nás prehľadne informujú o trendoch udalostí firiem a kľúčových metrikách. Umožňujú nám pochopiť správanie firiem a organizáciu firemných udalostí. Vizualizácie sú postavené nad faktovou tabuľkou `fact_company_events` a príslušnými dimenziami.
 
 
 <p align="center">
-  <img width="2684" height="1251" alt="image" src="https://github.com/user-attachments/assets/c710325e-e1f2-4879-a2ac-7c42ddde8a98" />
+  <img width="2684" height="1251" alt="image" src="img/Dashboard_Company.png" />
   <br>
-  <em>Obrázok 3 - Dashboard Company datasetu (placeholder, will replace with a screenshot from a larger screen when im able to :p)</em>
+  <em>Obrázok 3 - Dashboard Company datasetu</em>
 </p>
 
 
